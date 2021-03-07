@@ -1,144 +1,224 @@
 import 'package:flutter/material.dart';
-import 'package:restful_test/next.dart';
+//import 'package:restful_test/next.dart';
 import 'dart:convert';
+import 'dart:async';
+import 'package:http/http.dart' as http; 
+import 'Product.dart'; 
 
-void main() => runApp(MyApp());
- 
+void main() => runApp(MyApp(products: fetchProducts())); 
+
+List<ShopingPullData> parseProducts(String responseBody) { 
+   final parsed = json.decode(responseBody).cast<Map<String, dynamic>>(); 
+   return parsed.map<ShopingPullData>((json) => ShopingPullData.fromMap(json)).toList(); 
+} 
+Future<List<ShopingPullData>> fetchProducts() async { 
+   final response = await http.get('http://192.168.205.1:8000/data.json'); 
+   if (response.statusCode == 200) { 
+      return parseProducts(response.body); 
+   } else { 
+      throw Exception('Unable to fetch products from the REST API'); 
+   } 
+}
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Http',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-        visualDensity: VisualDensity.adaptivePlatformDensity,
-      ),
-      home: MyHomePage(),
-    );
-  }
+   final Future<List<ShopingPullData>> products; 
+   MyApp({Key key, this.products}) : super(key: key); 
+   
+   // This widget is the root of your application. 
+   @override 
+   Widget build(BuildContext context) {
+      return MaterialApp(
+         title: 'Flutter Demo', 
+         theme: ThemeData( 
+            primarySwatch: Colors.blue, 
+         ), 
+         home: MyHomePage(title: 'Product Navigation demo home page', products: products), 
+      ); 
+   }
 }
-
-
-
-Future<ShopingPullData> fetchAlbum() async {
-  var http;
-  final response =
-      await http.get(Uri.https('jsonplaceholder.typicode.com', 'albums/1'));
-
-  if (response.statusCode == 200) {
-    // If the server did return a 200 OK response,
-    // then parse the JSON.
-    return ShopingPullData.fromJson(jsonDecode(response.body));
-  } else {
-    // If the server did not return a 200 OK response,
-    // then throw an exception.
-    throw Exception('Failed to load album');
-  }
+class MyHomePage extends StatelessWidget { 
+   final String title; 
+   final Future<List<ShopingPullData>> products; 
+   MyHomePage({Key key, this.title, this.products}) : super(key: key); 
+   
+   // final items = Product.getProducts();
+   @override 
+   Widget build(BuildContext context) { 
+      return Scaffold(
+         appBar: AppBar(title: Text("Product Navigation")), 
+         body: Center(
+            child: FutureBuilder<List<ShopingPullData>>(
+               future: products, builder: (context, snapshot) {
+                  if (snapshot.hasError) print(snapshot.error); 
+                  return snapshot.hasData ? ProductBoxList(items: snapshot.data) 
+                  
+                  // return the ListView widget : 
+                  : Center(child: CircularProgressIndicator()); 
+               },
+            ),
+         )
+      );
+   }
 }
-
-class ShopingPullData {
-  String name;
-  String price;
-  String image;
-  String color;
- 
-  ShopingPullData({this.name, this.price, this.image, this.color});
- 
-  ShopingPullData.fromJson(Map<String, dynamic> json) {
-    name = json['name'];
-    price = json['price'];
-    image = json['image'];
-    color = json['color'];
-  }
- 
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['name'] = this.name;
-    data['price'] = this.price;
-    data['image'] = this.image;
-    data['color'] = this.color;
-    return data;
-  }
+class ProductBoxList extends StatelessWidget {
+   final List<ShopingPullData> items; 
+   ProductBoxList({Key key, this.items}); 
+   
+   @override 
+   Widget build(BuildContext context) {
+      return ListView.builder(
+         itemCount: items.length, 
+         itemBuilder: (context, index) { 
+            return GestureDetector( 
+               child: ProductBox(item: items[index]), 
+               onTap: () { 
+                  Navigator.push(
+                     context, MaterialPageRoute( 
+                        builder: (context) => ProductPage(item: items[index]), 
+                     ), 
+                  ); 
+               }, 
+            ); 
+         }, 
+      ); 
+   } 
+} 
+class ProductPage extends StatelessWidget { 
+   ProductPage({Key key, this.item}) : super(key: key); 
+   final ShopingPullData item; 
+   @override 
+   Widget build(BuildContext context) {
+      return Scaffold(
+         appBar: AppBar(title: Text(this.item.name),), 
+         body: Center( 
+            child: Container(
+               padding: EdgeInsets.all(0), 
+               child: Column( 
+                  mainAxisAlignment: MainAxisAlignment.start, 
+                  crossAxisAlignment: CrossAxisAlignment.start, 
+                  children: <Widget>[
+                     Image.asset("assets/product/" + this.item.image), 
+                     Expanded( 
+                        child: Container( 
+                           padding: EdgeInsets.all(5), 
+                           child: Column( 
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                              children: <Widget>[ 
+                                 Text(this.item.name, style: 
+                                    TextStyle(fontWeight: FontWeight.bold)), 
+                                 Text(this.item.name), 
+                                 Text("Price: " + this.item.price.toString()), 
+                                 RatingBox(), 
+                              ], 
+                           )
+                        )
+                     ) 
+                  ]
+               ), 
+            ), 
+         ), 
+      ); 
+   } 
 }
- 
-
- 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-  final String title;
- 
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
+class RatingBox extends StatefulWidget { 
+   @override 
+   _RatingBoxState createState() =>_RatingBoxState(); 
+} 
+class _RatingBoxState extends State<RatingBox> { 
+   int _rating = 0; 
+   void _setRatingAsOne() {
+      setState(() { 
+         _rating = 1; 
+      }); 
+   }
+   void _setRatingAsTwo() {
+      setState(() {
+         _rating = 2; 
+      }); 
+   }
+   void _setRatingAsThree() { 
+      setState(() {
+         _rating = 3; 
+      }); 
+   }
+   Widget build(BuildContext context) {
+      double _size = 20; 
+      print(_rating); 
+      return Row(
+         mainAxisAlignment: MainAxisAlignment.end, 
+         crossAxisAlignment: CrossAxisAlignment.end, 
+         mainAxisSize: MainAxisSize.max, 
+         
+         children: <Widget>[
+            Container(
+               padding: EdgeInsets.all(0), 
+               child: IconButton( 
+                  icon: (
+                     _rating >= 1 
+                     ? Icon(Icons.star, size: _size,) 
+                     : Icon(Icons.star_border, size: _size,)
+                  ), 
+                  color: Colors.red[500], onPressed: _setRatingAsOne, iconSize: _size, 
+               ), 
+            ), 
+            Container(
+               padding: EdgeInsets.all(0), 
+               child: IconButton(
+                  icon: (
+                     _rating >= 2 
+                     ? Icon(Icons.star, size: _size,) 
+                     : Icon(Icons.star_border, size: _size, )
+                  ), 
+                  color: Colors.red[500], 
+                  onPressed: _setRatingAsTwo, 
+                  iconSize: _size, 
+               ), 
+            ), 
+            Container(
+               padding: EdgeInsets.all(0), 
+               child: IconButton(
+                  icon: (
+                     _rating >= 3 ? 
+                     Icon(Icons.star, size: _size,)
+                     : Icon(Icons.star_border, size: _size,)
+                  ), 
+                  color: Colors.red[500], 
+                  onPressed: _setRatingAsThree, 
+                  iconSize: _size, 
+               ), 
+            ), 
+         ], 
+      ); 
+   } 
 }
-class _MyHomePageState extends State<MyHomePage> {
-  List data;
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Shopping'),
-        ),
-        body: Center(
-          child: FutureBuilder(
-            future: DefaultAssetBundle.of(context)
-                .loadString('assets/data.JSON'),
-            builder: (context, snapshot) {
-              if(!snapshot.hasData) {
-                return CircularProgressIndicator();
-              }
-              var newData = json.decode(snapshot.data.toString());
-              return ListView.builder(
-                itemBuilder: (BuildContext context, int index) {
-                  return Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15.0)),
-                    //color: Colors.newData['color']),
-                    child: InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => Temp(index)
-                                )
-                                );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(
-                            top: 32, bottom: 32, left: 16, right: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(
-                                    newData[index]['name'],
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 18),
-                                  ),
-                                
-                                Text(
-                                  newData[index]['price'],
-                                  style: TextStyle(color: Colors.grey.shade600),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              height: 50,
-                              width: 50,
-                              child: Image.asset(newData[index]['image']),
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                },
-                itemCount: newData == null ? 0 : newData.length,
-              );
-            },
-          ),
-        ));
-  }
+class ProductBox extends StatelessWidget {
+   ProductBox({Key key, this.item}) : super(key: key); 
+   final ShopingPullData item; 
+   
+   Widget build(BuildContext context) {
+      return Container(
+         padding: EdgeInsets.all(2), height: 140, 
+         child: Card(
+            child: Row( 
+               mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+               children: <Widget>[
+                  Image.asset("assets/product/" + this.item.image), 
+                  Expanded( 
+                     child: Container( 
+                        padding: EdgeInsets.all(5), 
+                        child: Column( 
+                           mainAxisAlignment: MainAxisAlignment.spaceEvenly, 
+                           children: <Widget>[ 
+                              Text(this.item.name, style:TextStyle(fontWeight: FontWeight.bold)), 
+                              Text(this.item.name), 
+                              Text("Price: " + this.item.price.toString()), 
+                              RatingBox(), 
+                           ], 
+                        )
+                     )
+                  )
+               ]
+            ), 
+         )
+      ); 
+   } 
 }

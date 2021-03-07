@@ -2,7 +2,7 @@
   {
     "name": "EFFACLAR GEL MOUSS T50ML F GB",
     "price": "฿290",
-    "image": "assets/product/1.png",
+    "image": "1.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 290
@@ -10,7 +10,7 @@
   {
     "name": "EFFACLAR DUO 40ML",
     "price": "฿990",
-    "image": "assets/product/2.png",
+    "image": "2.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 990
@@ -18,7 +18,7 @@
   {
     "name": "EFFACLAR DUO(+) SPF30 40ML",
     "price": "฿1,190",
-    "image": "assets/product/3.png",
+    "image": "3.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1190
@@ -26,7 +26,7 @@
   {
     "name": "Anthelios Drytouch Cream SPF50+",
     "price": "฿1,300",
-    "image": "assets/product/4.png",
+    "image": "4.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1300
@@ -34,7 +34,7 @@
   {
     "name": "Anthelios Shaka Fluid SPF50+ 50ML",
     "price": "฿1,400",
-    "image": "assets/product/5.png",
+    "image": "5.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1400
@@ -42,7 +42,7 @@
   {
     "name": "Anthelios Ultra Comfort SPF50+",
     "price": "฿1,300",
-    "image": "assets/product/6.png",
+    "image": "6.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1300
@@ -50,7 +50,7 @@
   {
     "name": "Anthelios XI SPF 50+ Lotion 100ML",
     "price": "฿1,100",
-    "image": "assets/product/7.png",
+    "image": "7.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1100
@@ -58,7 +58,7 @@
   {
     "name": "EFL MICELLAR WATER OILY SKIN",
     "price": "฿400",
-    "image": "assets/product/8.png",
+    "image": "8.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 400
@@ -66,7 +66,7 @@
   {
     "name": "EFFACLAR DUO(+) 7.5ML",
     "price": "฿199",
-    "image": "assets/product/9.png",
+    "image": "9.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 199
@@ -74,7 +74,7 @@
   {
     "name": "THERMAL SPRING WATER 100ML",
     "price": "฿310",
-    "image": "assets/product/10.png",
+    "image": "10.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 310
@@ -82,7 +82,7 @@
   {
     "name": "Invisible Spray SPF 50+ 200ML",
     "price": "฿1,300",
-    "image": "assets/product/11.png",
+    "image": "11.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1300
@@ -90,7 +90,7 @@
   {
     "name": "REDERMIC 40ML",
     "price": "฿2,100",
-    "image": "assets/product/12.png",
+    "image": "12.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 2100
@@ -98,7 +98,7 @@
   {
     "name": "EFFACLAR PURIFYING GEL 200ML",
     "price": "฿890",
-    "image": "assets/product/13.png",
+    "image": "13.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 890
@@ -106,7 +106,7 @@
   {
     "name": "EFFACLAR PURIFYING GEL 400ML",
     "price": "฿1,200",
-    "image": "assets/product/14.png",
+    "image": "14.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1200
@@ -114,7 +114,7 @@
   {
     "name": "EFFACLAR SERUM 30ML",
     "price": "฿1,300",
-    "image": "assets/product/15.png",
+    "image": "15.png",
     "color": "0xFFF48FB1",
     "description": "ff",
     "pricetag": 1300
